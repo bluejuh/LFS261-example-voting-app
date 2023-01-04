@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    tools{
+        nodejs 'NodeJS 8.9.0'
+    }
+
+    stages{
+        stage("build"){
+            when{
+                changeset "**/result/**"
+            }
+
+            steps{
+                echo 'building Result NodeJS Application'
+                dir('result'){
+                    sh 'npm install'
+                }
+            }
+        }
+        stage("test"){
+            when{
+                changeset "**/result/**"
+            }
+
+            steps{
+                echo 'Running Tests on Result NodeJS Application'
+                dir('result'){
+                    sh 'npm install'
+                    sh 'npm test'
+                }
+            }
+        }
+    }
+    post{
+        always{
+            echo 'Building multibranch pipeline for Result NodeJS Application is completed..'
+        }
+        failure{
+            slackSend (channel: "#ci-cd", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
+        }
+        success{
+            slackSend (channel: "#ci-cd", message: "Build Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
+        }
+    }
+}
+
