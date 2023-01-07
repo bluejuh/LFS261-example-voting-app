@@ -87,7 +87,7 @@ pipeline {
 
     post{
         always{
-            echo 'Building multibranch pipeline for Result NodeJS Application is completed..'
+            echo 'Building multibranch pipeline for vote app is completed..'
         }
         failure{
             slackSend (channel: "#ci-cd", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
